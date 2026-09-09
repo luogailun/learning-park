@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FF8FB1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>学习乐园 · 五年级</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部彩条 -->
+<div class="rainbow-bar"></div>
+
+<div class="app">
+
+  <!-- ============ PC 侧边栏 ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">🌈</div>
+      <div class="brand-text">
+        <div class="brand-name">学习乐园</div>
+        <div class="brand-sub">五年级 · 每日闯关</div>
+      </div>
+    </div>
+
+    <nav class="side-nav" id="sideNav"></nav>
+
+    <div class="side-honor">
+      <div class="sh-emoji" id="sideHonorEmoji">🥚</div>
+      <div class="sh-name" id="sideHonorName">启程新星</div>
+      <div class="sh-label">当前荣誉</div>
+    </div>
+
+    <div class="side-star">
+      <div class="side-star-num"><span id="sideStar">0</span> ⭐</div>
+      <div class="side-star-label">我的星星</div>
+    </div>
+  </aside>
+
+  <!-- ============ 主内容 ============ -->
+  <main class="main" id="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 id="pageTitle">今日乐园</h1>
+        <p id="pageSub">欢迎回来，小勇士！</p>
+      </div>
+      <div class="topbar-stats">
+        <div class="stat-pill pill-honor"><span class="s-ico">🏅</span><span id="topHonor">启程新星</span></div>
+        <div class="stat-pill pill-star"><span class="s-ico">⭐</span><span id="topStar">0</span></div>
+        <div class="stat-pill pill-fire"><span class="s-ico">🔥</span><span id="topStreak">0</span>天</div>
+      </div>
+    </header>
+
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<!-- ============ 移动端底部 Tab ============ -->
+<nav class="tabbar" id="tabbar"></nav>
+
+<!-- 打卡成功弹窗 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal-card">
+    <div class="modal-emoji" id="modalEmoji">🎉</div>
+    <div class="modal-title" id="modalTitle">打卡成功！</div>
+    <div class="modal-text" id="modalText">获得 1 颗星星</div>
+    <button class="btn btn-primary modal-btn" id="modalBtn">太棒啦！</button>
+  </div>
+</div>
+
+<!-- 星星飘落容器 -->
+<div class="star-fall" id="starFall"></div>
+
+<!-- Supabase JS SDK（仅在 config.js 中开启云同步时才会用到） -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/data.js"></script>
+<script src="js/config.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
