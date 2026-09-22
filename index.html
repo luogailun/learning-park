@@ -101,6 +101,9 @@
 <script>
 /* ================= PWA：注册 Service Worker + 安装引导 ================= */
 (function () {
+  // 独立 App（安卓 APK）内不显示「安装到桌面」引导
+  if (window.__IS_APP__) return;
+
   // 1) 注册 Service Worker（离线可用 + 可安装为 App / 打包 APK 的前提）
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     window.addEventListener('load', function () {
