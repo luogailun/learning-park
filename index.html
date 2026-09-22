@@ -5,8 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#FF8FB1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="学习乐园">
+<meta name="description" content="每天六项打卡，集星星升荣誉，越坚持越厉害！">
 <title>学习乐园 · 五年级</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -74,11 +80,109 @@
 <!-- 星星飘落容器 -->
 <div class="star-fall" id="starFall"></div>
 
-<!-- Supabase JS SDK（仅在 config.js 中开启云同步时才会用到） -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- 安装到桌面 / APK 引导条 -->
+<div class="pwa-bar" id="pwaBar" hidden>
+  <div class="pwa-logo" id="pwaLogo">APP</div>
+  <div class="pwa-txt">
+    <div class="pwa-title">安装「学习乐园」到桌面</div>
+    <div class="pwa-sub" id="pwaSub">像 App 一样打开，不用每次输网址</div>
+  </div>
+  <button class="pwa-btn" id="pwaGo">安装</button>
+  <button class="pwa-close" id="pwaClose" aria-label="关闭">×</button>
+</div>
+
+<!-- Supabase SDK（已本地化，保证 APK / 离线场景可用） -->
+<script src="js/vendor/supabase.js"></script>
 <script src="js/data.js"></script>
 <script src="js/config.js"></script>
 <script src="js/cloud.js"></script>
 <script src="js/app.js"></script>
+
+<script>
+/* ================= PWA：注册 Service Worker + 安装引导 ================= */
+(function () {
+  // 1) 注册 Service Worker（离线可用 + 可安装为 App / 打包 APK 的前提）
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+
+  // 2) 深链：shortcut 打开时直达指定页面
+  try {
+    var q = new URLSearchParams(location.search);
+    var target = q.get('go');
+    if (target && typeof window.go === 'function') {
+      setTimeout(function () { window.go(target); }, 60);
+    }
+  } catch (e) {}
+
+  // 3) 安装引导
+  var bar = document.getElementById('pwaBar');
+  var btn = document.getElementById('pwaGo');
+  var close = document.getElementById('pwaClose');
+  var sub = document.getElementById('pwaSub');
+  var logo = document.getElementById('pwaLogo');
+  if (!bar) return;
+
+  var KEY = 'lp-pwa-hint-dismissed';
+  var standalone = window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  function show(isIOS) {
+    if (standalone || dismissed) return;
+    if (isIOS) {
+      sub.innerHTML = '点底部「分享」→「添加到主屏幕」';
+      btn.textContent = '知道了';
+    }
+    bar.hidden = false;
+  }
+  function hideForever() {
+    bar.hidden = true;
+    try { localStorage.setItem(KEY, '1'); } catch (e) {}
+  }
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document);
+
+  // Android / Chrome：监听可安装事件
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    window.__deferredPrompt = e;
+    btn.textContent = '安装';
+    show(false);
+  });
+
+  window.addEventListener('appinstalled', function () {
+    hideForever();
+  });
+
+  btn.addEventListener('click', function () {
+    var p = window.__deferredPrompt;
+    if (p && p.prompt) {
+      p.prompt();
+      p.userChoice.then(function () { window.__deferredPrompt = null; });
+    } else {
+      hideForever();
+    }
+  });
+  close.addEventListener('click', hideForever);
+
+  // iOS 或已可安装但没触发事件时，延时兜底显示（浏览 25 秒后温和提示）
+  if (isIOS) {
+    setTimeout(function () { show(true); }, 25000);
+  } else {
+    setTimeout(function () {
+      if (!window.__deferredPrompt) show(false);
+    }, 20000);
+  }
+
+  // 点击 App 图标打开时隐藏引导条
+  if (standalone) hideAll();
+  function hideAll() { if (bar) bar.hidden = true; }
+})();
+</script>
 </body>
 </html>
