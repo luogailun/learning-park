@@ -1,0 +1,51 @@
+{
+  "name": "学习乐园 · 五年级打卡",
+  "short_name": "学习乐园",
+  "description": "每天六项打卡，集星星升荣誉，越坚持越厉害！",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "id": "/learning-park/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#FFF6FA",
+  "theme_color": "#FF8FB1",
+  "categories": ["education", "kids", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "今日打卡",
+      "short_name": "打卡",
+      "url": "./index.html?source=shortcut&go=home",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "荣誉殿堂",
+      "short_name": "荣誉",
+      "url": "./index.html?source=shortcut&go=honor",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
